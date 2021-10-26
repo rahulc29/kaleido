@@ -9,10 +9,10 @@
 namespace kaleido {
     class Lexer {
     public:
-        Lexer(std::istream& input);
+        Lexer(std::istream &input);
         std::unique_ptr<Token> nextToken() const;
     private:
-        std::istream& mInput;
+        std::istream &mInput;
     };
 }
 
