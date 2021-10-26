@@ -24,6 +24,8 @@ namespace kaleido {
         TokenType type() const;
         const std::string &value() const;
         std::string &value();
+        bool operator==(const Token &that);
+        bool operator!=(const Token &that);
         static Token END_OF_FILE_TOKEN;
     protected:
         TokenType mTokenType;

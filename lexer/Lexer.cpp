@@ -1,3 +1,4 @@
+#include <sstream>
 #include "Lexer.h"
 #include "Token.h"
 
@@ -21,6 +22,7 @@ std::unique_ptr<kaleido::Token> kaleido::Lexer::nextToken() const {
         // only two keywords :P
         if (nextPotentialToken=="def" || nextPotentialToken=="extern") {
             toReturn = std::make_unique<Token>(Token(nextPotentialToken, TokenType::TOKEN_KEYWORD));
+            return toReturn;
         }
         try {
             std::stod(nextPotentialToken);
