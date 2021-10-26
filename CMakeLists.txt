@@ -12,7 +12,7 @@ include_directories(${LLVM_INCLUDE_DIRS})
 separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
 
-add_executable(kaleido main.cpp lexer/Token.cpp lexer/Token.h lexer/Lexer.cpp lexer/Lexer.h lexer/NumericToken.cpp lexer/NumericToken.h lexer/KeywordToken.cpp lexer/KeywordToken.h lexer/IdentifierToken.cpp lexer/IdentifierToken.h)
+add_executable(kaleido main.cpp lexer/Token.cpp lexer/Token.h lexer/Lexer.cpp lexer/Lexer.h)
 
 llvm_map_components_to_libnames(llvm_libs support core irreader)
 
