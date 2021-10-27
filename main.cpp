@@ -1,6 +1,28 @@
 #include <gtest/gtest.h>
+#include <fstream>
 #include "lexer/Lexer.h"
 using namespace kaleido;
+
+TEST(LexerTest, CommentsTest) {
+    std::istringstream input("# This is a comment\n"
+                             "# This is also a comment\n"
+                             "#This too is a comment\n"
+                             "# The lexer should ignore this\n"
+                             "def foo 9\n"
+                             "def bar 14\n"
+                             "# This should also be ignored\n"
+                             "#Soshouldthis\n"
+                             "def baz 69");
+    Lexer lexer(input);
+    auto first = lexer.nextToken();
+    EXPECT_EQ(first->value(), "def");
+    for (auto i = 0; i < 7; i++) {
+        lexer.nextToken();
+    }
+    auto last = lexer.nextToken();
+    EXPECT_EQ(last->value(), "69");
+}
+
 TEST(LexerTest, KeywordIdentifierNumber) {
     std::istringstream input("def foo 3");
     Lexer lexer(input);
