@@ -18,6 +18,22 @@ TEST(LexerTest, IdentifierTest) {
     EXPECT_EQ(lexer.nextToken()->type(), TokenType::TOKEN_NUMBER);
 }
 
+TEST(LexerTest, OperatorTest) {
+    std::istringstream input("def baz ( 3 + ( 4 / 5 ) )");
+    Lexer lexer(input);
+    // ignore first two
+    lexer.nextToken();
+    lexer.nextToken();
+    EXPECT_EQ(lexer.nextToken()->type(), TokenType::TOKEN_OPERATOR);
+    lexer.nextToken(); // ignore `3`
+    EXPECT_EQ(lexer.nextToken()->value(), "+");
+    EXPECT_EQ(lexer.nextToken()->type(), TokenType::TOKEN_OPERATOR);
+    lexer.nextToken(); // ignore `4`
+    EXPECT_EQ(lexer.nextToken()->value(), "/");
+    lexer.nextToken(); // ignore `5`
+    EXPECT_EQ(lexer.nextToken()->value(), ")");
+    EXPECT_EQ(lexer.nextToken()->value(), ")");
+}
 
 TEST(LexerTest, CommentsTest) {
     std::istringstream input("# This is a comment\n"
