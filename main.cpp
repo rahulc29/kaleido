@@ -3,6 +3,38 @@
 #include "lexer/Lexer.h"
 using namespace kaleido;
 
+TEST(LexerTest, IdentifierTest) {
+    std::istringstream input("def _bar 123\n"
+                             "def __123 90.21");
+    Lexer lexer(input);
+    EXPECT_EQ(lexer.nextToken()->value(), "def");
+    EXPECT_EQ(lexer.nextToken()->type(), TokenType::TOKEN_IDENTIFIER);
+    EXPECT_EQ(lexer.nextToken()->type(), TokenType::TOKEN_NUMBER);
+    // skip next token
+    lexer.nextToken();
+    auto weirdButValidIdentifier = lexer.nextToken();
+    EXPECT_EQ(weirdButValidIdentifier->type(), TokenType::TOKEN_IDENTIFIER);
+    EXPECT_EQ(weirdButValidIdentifier->value(), "__123");
+    EXPECT_EQ(lexer.nextToken()->type(), TokenType::TOKEN_NUMBER);
+}
+
+TEST(LexerTest, OperatorTest) {
+    std::istringstream input("def baz ( 3 + ( 4 / 5 ) )");
+    Lexer lexer(input);
+    // ignore first two
+    lexer.nextToken();
+    lexer.nextToken();
+    EXPECT_EQ(lexer.nextToken()->type(), TokenType::TOKEN_OPERATOR);
+    lexer.nextToken(); // ignore `3`
+    EXPECT_EQ(lexer.nextToken()->value(), "+");
+    EXPECT_EQ(lexer.nextToken()->type(), TokenType::TOKEN_OPERATOR);
+    lexer.nextToken(); // ignore `4`
+    EXPECT_EQ(lexer.nextToken()->value(), "/");
+    lexer.nextToken(); // ignore `5`
+    EXPECT_EQ(lexer.nextToken()->value(), ")");
+    EXPECT_EQ(lexer.nextToken()->value(), ")");
+}
+
 TEST(LexerTest, CommentsTest) {
     std::istringstream input("# This is a comment\n"
                              "# This is also a comment\n"
