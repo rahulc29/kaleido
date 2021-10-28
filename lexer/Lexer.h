@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <istream>
+#include <regex>
 #include "Token.h"
 
 namespace kaleido {
@@ -13,6 +14,11 @@ namespace kaleido {
         std::unique_ptr<Token> nextToken() const;
     private:
         std::istream &mInput;
+        static std::regex IS_IDENTIFIER;
+        static std::regex IS_NUMBER;
+        static std::regex IS_KEYWORD;
+        static std::regex IS_OPERATOR;
+        static std::regex IS_COMMENT;
     };
 }
 

@@ -14,7 +14,11 @@ namespace kaleido {
         // identifiers
         TOKEN_IDENTIFIER = -3,
         // numeric constants
-        TOKEN_NUMBER = -4
+        TOKEN_NUMBER = -4,
+        // operators include +-*/%^&!|= and also ()
+        TOKEN_OPERATOR = -5,
+        // unspecified such as '[' or '\'' etc
+        TOKEN_UNSPECIFIED = -6
     };
 
     class Token {
