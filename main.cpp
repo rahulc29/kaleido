@@ -3,6 +3,22 @@
 #include "lexer/Lexer.h"
 using namespace kaleido;
 
+TEST(LexerTest, IdentifierTest) {
+    std::istringstream input("def _bar 123\n"
+                             "def __123 90.21");
+    Lexer lexer(input);
+    EXPECT_EQ(lexer.nextToken()->value(), "def");
+    EXPECT_EQ(lexer.nextToken()->type(), TokenType::TOKEN_IDENTIFIER);
+    EXPECT_EQ(lexer.nextToken()->type(), TokenType::TOKEN_NUMBER);
+    // skip next token
+    lexer.nextToken();
+    auto weirdButValidIdentifier = lexer.nextToken();
+    EXPECT_EQ(weirdButValidIdentifier->type(), TokenType::TOKEN_IDENTIFIER);
+    EXPECT_EQ(weirdButValidIdentifier->value(), "__123");
+    EXPECT_EQ(lexer.nextToken()->type(), TokenType::TOKEN_NUMBER);
+}
+
+
 TEST(LexerTest, CommentsTest) {
     std::istringstream input("# This is a comment\n"
                              "# This is also a comment\n"

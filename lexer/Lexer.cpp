@@ -49,5 +49,5 @@ kaleido::Lexer::Lexer(std::istream &input) : mInput(input) {
 std::regex kaleido::Lexer::IS_IDENTIFIER = std::regex("[a-zA-Z_][a-zA-Z0-9_]*");
 std::regex kaleido::Lexer::IS_NUMBER = std::regex("[0-9]+\\.?[0-9]*");
 std::regex kaleido::Lexer::IS_KEYWORD = std::regex("def|extern");
-std::regex kaleido::Lexer::IS_OPERATOR = std::regex("\\+|\\-|\\*|\\/|\\(|\\)");
+std::regex kaleido::Lexer::IS_OPERATOR = std::regex(R"(\+|\-|\*|\/|\(|\))");
 std::regex kaleido::Lexer::IS_COMMENT = std::regex("^\\#.*");
