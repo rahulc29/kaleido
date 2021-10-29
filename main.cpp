@@ -86,6 +86,21 @@ TEST(LexerTest, NonPrettyOperatorExpressionTest) {
     EXPECT_EQ(tokens[6]->type(), TokenType::TOKEN_OPERATOR);
 }
 
+TEST(LexerTest, NobufferTokenizationTest) {
+    std::istringstream input("def foo 3+(4*5)");
+    RegexLexer lexer(input);
+    auto tokens = std::move(lexer.tokenize());
+    EXPECT_EQ(tokens[0]->value(), "def");
+    EXPECT_EQ(tokens[1]->type(), TokenType::TOKEN_IDENTIFIER);
+    EXPECT_EQ(tokens[2]->value(), "3");
+    EXPECT_EQ(tokens[3]->type(), TokenType::TOKEN_OPERATOR);
+    EXPECT_EQ(tokens[4]->type(), TokenType::TOKEN_OPERATOR);
+    EXPECT_EQ(tokens[5]->value(), "4");
+    EXPECT_EQ(tokens[6]->value(), "*");
+    EXPECT_EQ(tokens[7]->value(), "5");
+    EXPECT_EQ(tokens[8]->type(), TokenType::TOKEN_OPERATOR);
+}
+
 using testing::Eq;
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

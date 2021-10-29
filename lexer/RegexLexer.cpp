@@ -48,7 +48,7 @@ std::regex kaleido::RegexLexer::IS_OPERATOR = std::regex(R"(\+|\-|\*|\/|\(|\))")
 std::regex kaleido::RegexLexer::IS_COMMENT = std::regex("^\\#.*");
 kaleido::RegexLexer::RegexLexer(std::istream &input) : mInput(input) {
 }
-std::vector<std::unique_ptr<kaleido::Token>> kaleido::RegexLexer::tokenizeString(std::string &toTokenize) {
+std::vector<std::unique_ptr<kaleido::Token>> kaleido::RegexLexer::tokenizeString(std::string &toTokenize) const {
     // vector to store all the tokens
     std::vector<std::unique_ptr<Token>> toReturn;
     if (!toTokenize.empty()) {
@@ -75,7 +75,20 @@ std::vector<std::unique_ptr<kaleido::Token>> kaleido::RegexLexer::tokenizeString
 
 std::vector<std::unique_ptr<kaleido::Token>> kaleido::RegexLexer::tokenize() const {
     std::vector<std::unique_ptr<Token>> toReturn;
-
+    std::string nextPotentialToken;
+    while (!mInput.eof()) {
+        mInput >> nextPotentialToken;
+        while (std::regex_match(nextPotentialToken, IS_COMMENT)) {
+            mInput.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            mInput >> nextPotentialToken;
+        }
+        auto toAppend = std::move(tokenizeString(nextPotentialToken));
+        // using std::vector<T>::insert() gives some error
+        for (auto &i : toAppend) {
+            toReturn.push_back(std::move(i));
+        }
+    }
+    return toReturn;
 }
 bool kaleido::RegexLexer::matchComparator(const std::pair<std::smatch, TokenType> &a,
                                           const std::pair<std::smatch, TokenType> &b) {
