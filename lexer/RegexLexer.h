@@ -6,8 +6,6 @@ namespace kaleido {
     class RegexLexer : public Lexer {
     public:
         RegexLexer(std::istream &input);
-        [[deprecated]]
-        std::unique_ptr<Token> nextToken() const override;
         std::vector<std::unique_ptr<Token>> tokenize() const override;
         std::vector<std::unique_ptr<Token>> tokenizeString(std::string &toTokenize) const;
     private:
