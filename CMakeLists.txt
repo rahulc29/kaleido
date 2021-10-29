@@ -11,7 +11,7 @@ include_directories(${LLVM_INCLUDE_DIRS})
 separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
 
-add_executable(kaleido lexer/Token.cpp lexer/Token.h lexer/Lexer.cpp lexer/Lexer.h main.cpp parser/TreeNode.cpp parser/TreeNode.h generator/Generator.cpp generator/Generator.h parser/UnaryExpression.cpp parser/UnaryExpression.h parser/BinaryExpression.cpp parser/BinaryExpression.h parser/Negation.cpp parser/Negation.h parser/Addition.cpp parser/Addition.h parser/Multiplication.cpp parser/Multiplication.h parser/Division.cpp parser/Division.h parser/Subtraction.cpp parser/Subtraction.h)
+add_executable(kaleido lexer/Token.cpp lexer/Token.h lexer/Lexer.cpp lexer/Lexer.h main.cpp parser/TreeNode.cpp parser/TreeNode.h generator/Generator.cpp generator/Generator.h parser/UnaryExpression.cpp parser/UnaryExpression.h parser/BinaryExpression.cpp parser/BinaryExpression.h parser/Negation.cpp parser/Negation.h parser/Addition.cpp parser/Addition.h parser/Multiplication.cpp parser/Multiplication.h parser/Division.cpp parser/Division.h parser/Subtraction.cpp parser/Subtraction.h lexer/RegexLexer.cpp lexer/RegexLexer.h lexer/CharwiseLexer.cpp lexer/CharwiseLexer.h)
 add_subdirectory(lib/googletest-master)
 include_directories(lib/googletest-master/googletest/include)
 include_directories(lib/googletest-master/googlemock/include)
