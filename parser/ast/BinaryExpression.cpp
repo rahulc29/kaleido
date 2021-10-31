@@ -11,3 +11,11 @@ kaleido::ast::TreeNode &kaleido::ast::BinaryExpression::rightChild() {
 const kaleido::ast::TreeNode &kaleido::ast::BinaryExpression::rightChild() const {
     return *mRightChild;
 }
+kaleido::ast::BinaryExpression::BinaryExpression(std::shared_ptr<TreeNode> leftChild,
+                                                 std::shared_ptr<TreeNode> rightChild) {
+    mLeftChild = std::move(leftChild);
+    mRightChild = std::move(rightChild);
+}
+char kaleido::ast::BinaryExpression::opCode() const {
+    return mOpCode;
+}
