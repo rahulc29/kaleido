@@ -9,18 +9,8 @@ using kaleido::Token;
 namespace kaleido::parser {
     class RecursiveDescentParser : public Parser {
     public:
-        std::unique_ptr<TreeNode> parse() const override;
-    protected:
-        static std::map<char, int> OPERATOR_PRECEDENCE;
-        static int getPrecedence(const Token &token);
-        std::vector<std::unique_ptr<Token>> tokenStream = std::move(mLexer->tokenize());
-        int mCurrentIndexToken = 0;
-        const Token &getNextToken() {
-            return *tokenStream[mCurrentIndexToken++];
-        }
-        const Token &getCurrentToken() {
-            return *tokenStream[mCurrentIndexToken];
-        }
+        RecursiveDescentParser(std::unique_ptr<Lexer> lexer);
+        std::unique_ptr<TreeNode> parse() override;
         std::unique_ptr<TreeNode> parseLiteral();
         std::unique_ptr<TreeNode> parseParenthesized();
         std::unique_ptr<TreeNode> parseIdentifier();
@@ -30,6 +20,18 @@ namespace kaleido::parser {
         std::unique_ptr<TreeNode> parsePrototype();
         std::unique_ptr<TreeNode> parseDefinition();
         std::unique_ptr<TreeNode> parseExtern();
+        std::unique_ptr<TreeNode> parseTopLevelExpression();
+    protected:
+        static std::map<char, int> OPERATOR_PRECEDENCE;
+        static int getPrecedence(const Token &token);
+        std::vector<std::unique_ptr<Token>> mTokenStream = std::move(mLexer->tokenize());
+        int mCurrentTokenIndex = 0;
+        const Token &getNextToken() {
+            return *mTokenStream[mCurrentTokenIndex++];
+        }
+        const Token &getCurrentToken() {
+            return *mTokenStream[mCurrentTokenIndex];
+        }
     };
 }
 #endif //KALEIDO_PARSER_RECURSIVEDESCENTPARSER_H

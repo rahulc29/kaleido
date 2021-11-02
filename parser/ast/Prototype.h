@@ -6,6 +6,7 @@ namespace kaleido::ast {
     public:
         Prototype(std::string name, std::vector<std::string> args);
         const std::string &name() const;
+        const std::vector<std::string> &args() const;
     private:
         std::string mName;
         std::vector<std::string> mArgs;

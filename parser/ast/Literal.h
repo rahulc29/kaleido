@@ -5,6 +5,7 @@ namespace kaleido::ast {
     class Literal : public TreeNode {
     public:
         explicit Literal(double value = 0);
+        const double &value() const;
     private:
         double mValue;
     };

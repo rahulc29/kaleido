@@ -6,3 +6,6 @@ kaleido::ast::Prototype::Prototype(std::string name, std::vector<std::string> ar
 const std::string &kaleido::ast::Prototype::name() const {
     return mName;
 }
+const std::vector<std::string> &kaleido::ast::Prototype::args() const {
+    return mArgs;
+}

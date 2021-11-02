@@ -18,7 +18,7 @@ std::map<char, int> kaleido::parser::RecursiveDescentParser::OPERATOR_PRECEDENCE
     {'-', 2},
     {'*', 4}
 };
-std::unique_ptr<TreeNode> kaleido::parser::RecursiveDescentParser::parse() const {
+std::unique_ptr<TreeNode> kaleido::parser::RecursiveDescentParser::parse() {
 
 }
 std::unique_ptr<TreeNode> kaleido::parser::RecursiveDescentParser::parseLiteral() {
@@ -116,7 +116,7 @@ std::unique_ptr<TreeNode> kaleido::parser::RecursiveDescentParser::parseBinaryOp
             return lhs;
         }
         // worthy binary operator
-        getNextToken(); // eat the operator
+        auto operatorToken = getNextToken(); // eat the operator
         auto rhs = parsePrimary(); // rhs must now be primary expression
         if (rhs == nullptr) {
             return nullptr;
@@ -129,7 +129,7 @@ std::unique_ptr<TreeNode> kaleido::parser::RecursiveDescentParser::parseBinaryOp
                 return nullptr;
             }
         }
-        auto opCode = getCurrentToken().value()[0];
+        auto opCode = operatorToken.value()[0];
         switch (opCode) {
         case '+':lhs = std::make_unique<ast::Addition>(std::move(lhs), std::move(rhs));
             break;
@@ -199,4 +199,19 @@ std::unique_ptr<TreeNode> kaleido::parser::RecursiveDescentParser::parseExtern()
     getNextToken(); // eat the 'extern' keyword
     // extern functions only have a prototype 🥰
     return parsePrototype();
+}
+std::unique_ptr<TreeNode> kaleido::parser::RecursiveDescentParser::parseTopLevelExpression() {
+    // top level expressions
+    // 3 + 4 * 5
+    // evaluated on the fly
+    auto proto = std::make_unique<Prototype>("", std::vector<std::string>());
+    auto expr = parseExpression();
+    if (expr == nullptr) {
+        return nullptr;
+    }
+    return std::make_unique<Function>(std::move(proto), std::move(expr));
+}
+kaleido::parser::RecursiveDescentParser::RecursiveDescentParser(std::unique_ptr<Lexer> lexer) : Parser(std::move(
+    lexer)) {
+
 }
