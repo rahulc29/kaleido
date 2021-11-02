@@ -8,7 +8,7 @@ namespace kaleido::parser {
     public:
         explicit Parser(std::unique_ptr<Lexer> lexer);
         // pointer to the root of the tree
-        virtual std::unique_ptr<TreeNode> parse() const = 0;
+        virtual std::unique_ptr<TreeNode> parse() = 0;
     protected:
         std::unique_ptr<Lexer> mLexer;
     };

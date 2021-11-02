@@ -8,7 +8,7 @@ namespace kaleido::ast {
     // purely virtual non-instantiable class
     class TreeNode {
     public:
-        virtual void generate(const kaleido::gen::Generator &generator) = 0;
+        virtual void generate(const kaleido::gen::Generator &generator);
     };
 }
 #endif //KALEIDO_PARSER_TREENODE_H

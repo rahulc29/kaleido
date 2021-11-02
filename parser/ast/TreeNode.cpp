@@ -1,5 +1,4 @@
-//
-// Created by rahul on 28/10/21.
-//
-
 #include "TreeNode.h"
+void kaleido::ast::TreeNode::generate(const kaleido::gen::Generator &generator) {
+    // stub
+}
