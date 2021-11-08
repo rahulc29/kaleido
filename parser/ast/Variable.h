@@ -6,6 +6,7 @@ namespace kaleido::ast {
     public:
         explicit Variable(const std::string &&name = "");
         explicit Variable(std::string name = "");
+        const std::string &name() const;
     private:
         std::string mName;
     };
