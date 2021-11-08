@@ -16,7 +16,8 @@ std::map<char, int> kaleido::parser::RecursiveDescentParser::OPERATOR_PRECEDENCE
     {'<', 1},
     {'+', 2},
     {'-', 2},
-    {'*', 4}
+    {'*', 4},
+    {'/', 4}
 };
 std::unique_ptr<TreeNode> kaleido::parser::RecursiveDescentParser::parse() {
 
@@ -111,6 +112,9 @@ int kaleido::parser::RecursiveDescentParser::getPrecedence(const Token &token) {
 std::unique_ptr<TreeNode> kaleido::parser::RecursiveDescentParser::parseBinaryOperationRhs(int minPrecedence,
                                                                                            std::unique_ptr<TreeNode> lhs) {
     while (true) {
+        if (mCurrentTokenIndex >= mTokenStream.size()) {
+            return lhs;
+        }
         auto tokenPrecedence = getPrecedence(getCurrentToken());
         if (tokenPrecedence < minPrecedence) {
             return lhs;
@@ -122,7 +126,10 @@ std::unique_ptr<TreeNode> kaleido::parser::RecursiveDescentParser::parseBinaryOp
             return nullptr;
         }
         // peek into next and decide how to group operators
-        auto nextTokenPrecedence = getPrecedence(getCurrentToken());
+        auto nextTokenPrecedence = -1;
+        if (mCurrentTokenIndex < mTokenStream.size()) {
+            nextTokenPrecedence = getPrecedence(getCurrentToken());
+        }
         if (tokenPrecedence < nextTokenPrecedence) {
             rhs = parseBinaryOperationRhs(tokenPrecedence + 1, std::move(rhs));
             if (rhs == nullptr) {
