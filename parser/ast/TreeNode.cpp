@@ -1,4 +1,4 @@
 #include "TreeNode.h"
-void kaleido::ast::TreeNode::generate(const kaleido::gen::Generator &generator) {
-    // stub
+llvm::Value *kaleido::ast::TreeNode::generate(kaleido::gen::Generator &generator) {
+    return nullptr;
 }
