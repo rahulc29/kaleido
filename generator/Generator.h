@@ -31,6 +31,7 @@ namespace kaleido::gen {
         virtual Value *generate(const Invocation &invocation) = 0;
         virtual Value *generate(const Negation &negation) = 0;
         virtual Value *generate(const Subtraction &subtraction) = 0;
+        virtual Value *generate(const Multiplication &multiplication) = 0;
     };
 }
 #endif //KALEIDO_GENERATOR_GENERATOR_H
