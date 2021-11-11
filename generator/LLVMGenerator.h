@@ -27,7 +27,7 @@ namespace kaleido::gen {
         LLVMContext mContext;
         IRBuilder<> mBuilder;
         std::unique_ptr<Module> mModule;
-        std::map<std::string, Value *> mNamedValues;
+        std::unordered_map<std::string, Value *> mNamedValues;
         std::pair<Value *, Value *> generateBinarySides(const BinaryExpression &expression);
         static std::pair<Value *, Value *> EMPTY_PAIR = {};
         Value *generate(const Multiplication &multiplication);
