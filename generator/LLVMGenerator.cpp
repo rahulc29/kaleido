@@ -31,7 +31,27 @@ Value *kaleido::gen::LLVMGenerator::generate(const kaleido::ast::Function &funct
     return nullptr;
 }
 Value *kaleido::gen::LLVMGenerator::generate(const Invocation &invocation) {
-    return nullptr;
+    const auto &functionName = invocation.toInvoke();
+    auto toCall = mModule->getFunction(functionName);
+    if (toCall == nullptr) {
+        std::cerr << "No function " << functionName << " found\n";
+        return nullptr;
+    }
+    auto expected = toCall->arg_size();
+    auto actual = invocation.args().size();
+    if (expected != actual) {
+        std::cerr << "Incorrect no of arguments for function " << functionName << '\n';
+        std::cerr << "Expected " << expected << " but got " << actual << '\n';
+    }
+    std::vector<Value *> argsForCall;
+    for (const auto &arg: invocation.args()) {
+        argsForCall.push_back(arg->generate(*this));
+        if (argsForCall.back() == nullptr) {
+            // previous argument added was null => something went wrong
+            return nullptr;
+        }
+    }
+    return mBuilder.CreateCall(toCall, argsForCall, "calltmp");
 }
 Value *kaleido::gen::LLVMGenerator::generate(const Negation &negation) {
     return nullptr;
