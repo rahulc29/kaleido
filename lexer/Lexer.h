@@ -10,15 +10,7 @@
 namespace kaleido {
     class Lexer {
     public:
-        Lexer(std::istream &input);
-        std::unique_ptr<Token> nextToken() const;
-    private:
-        std::istream &mInput;
-        static std::regex IS_IDENTIFIER;
-        static std::regex IS_NUMBER;
-        static std::regex IS_KEYWORD;
-        static std::regex IS_OPERATOR;
-        static std::regex IS_COMMENT;
+        virtual std::vector<std::unique_ptr<Token>> tokenize() const  = 0;
     };
 }
 
