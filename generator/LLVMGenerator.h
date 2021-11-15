@@ -18,7 +18,8 @@ namespace kaleido::gen {
         Value *generate(const Variable &variable) override;
         Value *generate(const Addition &addition) override;
         Value *generate(const Division &division) override;
-        Value *generate(const Function &function) override;
+        LLVMFunction *generate(const Function &function) override;
+        LLVMFunction *generate(const Prototype &prototype) override;
         Value *generate(const Invocation &invocation) override;
         Value *generate(const Negation &negation) override;
         Value *generate(const Subtraction &subtraction) override;
@@ -30,7 +31,6 @@ namespace kaleido::gen {
         std::unordered_map<std::string, Value *> mNamedValues;
         std::pair<Value *, Value *> generateBinarySides(const BinaryExpression &expression);
         static std::pair<Value *, Value *> EMPTY_PAIR = {};
-        Value *generate(const Multiplication &multiplication);
     };
 }
 #endif //KALEIDO_GENERATOR_LLVMGENERATOR_H

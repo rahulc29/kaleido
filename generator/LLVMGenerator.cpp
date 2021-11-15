@@ -1,7 +1,14 @@
 #include "LLVMGenerator.h"
 #include <llvm/IR/Constants.h>
+#include <llvm/IR/Type.h>
+#include <llvm/IR/FunctionType.h>
+#include <llvm/IR/Function.h>
+#include <llvm/IR/BasicBlock.h>
+#include <llvm/IR/Verifier.h>
 #include <iostream>
 using llvm::ConstantFP;
+using llvm::Type;
+using llvm::BasicBlock;
 Value *kaleido::gen::LLVMGenerator::generate(const Literal &literal) {
     return ConstantFP::get(mContext, llvm::APFloat(literal.value()));
 }
@@ -27,7 +34,51 @@ Value *kaleido::gen::LLVMGenerator::generate(const Division &division) {
     }
     return mBuilder.CreateFDiv(sides.first, sides.second, "divtmp");
 }
-Value *kaleido::gen::LLVMGenerator::generate(const kaleido::ast::Function &function) {
+LLVMFunction *kaleido::gen::LLVMGenerator::generate(const Prototype &prototype) {
+    // a vector of the types of the function's parameters
+    // def foo(a b c) 
+    // params = [typeof(a), typeof(b), typeof(c)]
+    // => params = [double, double, double]
+    std::vector<Type *> params(prototype.args().size(), Type::getDoubleTy(mContext));
+    // typeof(foo) = {
+    //    "returnType": double,
+    //    "params": params,
+    //    "vararg": false
+    // }
+    auto funcType = FunctionType::get(Type::getDoubleTy(mContext), params, false);
+    auto function = LLVMFunction::Create(
+        funcType, LLVMFunction::ExternalLinkage, prototype.name(), mModule.get());
+    auto i = 0;
+    const auto &args = prototype.args();
+    for (auto &arg : function->args()) {
+        arg.setName(args[i++]);
+    }
+    return function;
+}
+LLVMFunction *kaleido::gen::LLVMGenerator::generate(const Function &function) {
+    auto func = mModule->getFunction(function.prototype().name());
+    if (func == nullptr) {
+        func = function.prototype().generate(*this);
+    }
+    if (func == nullptr) {
+        return nullptr;
+    }
+    if (!func->empty()) {
+        std::cerr << "Cannot redefine function " << function.prototype().name() << '\n';
+        return nullptr;
+    }
+    auto block = BasicBlock::Create(mContext, "entry", func);
+    mBuilder.SetInsertPoint(block);
+    mNamedValues.clear();
+    for (auto &arg : func->args()) {
+        mNamedValues[arg.getName()] = &arg;
+    }
+    if ((auto body = function.body().generate(*this)) != nullptr) {
+        mBuilder.CreateRet(body);
+        llvm::verifyFunction(*func);
+        return func;
+    }
+    func->eraseFromParent();
     return nullptr;
 }
 Value *kaleido::gen::LLVMGenerator::generate(const Invocation &invocation) {
