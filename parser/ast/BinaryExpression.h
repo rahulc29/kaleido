@@ -2,6 +2,7 @@
 #define KALEIDO_PARSER_BINARYEXPRESSION_H
 #include "TreeNode.h"
 namespace kaleido::ast {
+    class TreeNode;
     class BinaryExpression : public TreeNode {
     public:
         BinaryExpression(std::unique_ptr<TreeNode> leftChild, std::unique_ptr<TreeNode> rightChild);

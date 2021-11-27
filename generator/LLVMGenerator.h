@@ -4,13 +4,16 @@
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/Module.h>
+#include <llvm/IR/Value.h>
 #include "parser/ast/BinaryExpression.h"
 #include <memory>
 #include <parser/ast/Multiplication.h>
 using llvm::LLVMContext;
 using llvm::IRBuilder;
 using llvm::Module;
+using llvm::Value;
 namespace kaleido::gen {
+    class Generator;
     class LLVMGenerator : public Generator {
     public:
         LLVMGenerator();
@@ -30,7 +33,7 @@ namespace kaleido::gen {
         std::unique_ptr<Module> mModule;
         std::unordered_map<std::string, Value *> mNamedValues;
         std::pair<Value *, Value *> generateBinarySides(const BinaryExpression &expression);
-        static std::pair<Value *, Value *> EMPTY_PAIR = {};
+        const static std::pair<Value *, Value *> EMPTY_PAIR = {};
     };
 }
 #endif //KALEIDO_GENERATOR_LLVMGENERATOR_H

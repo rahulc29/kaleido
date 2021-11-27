@@ -7,7 +7,7 @@
 #include "parser/ast/Division.h"
 #include "parser/ast/Function.h"
 #include "parser/ast/Invocation.h"
-#include "parser/ast/Multiplication"
+#include "parser/ast/Multiplication.h"
 #include "parser/ast/Negation.h"
 #include "parser/ast/Prototype.h"
 #include "parser/ast/Subtraction.h"
@@ -22,7 +22,7 @@ namespace kaleido::gen {
         // factory method to get default implementation of generator
         static Generator *generator() {
             static LLVMGenerator theGenerator;
-            return &theGenerator;
+            return dynamic_cast<Generator *>(&theGenerator);
         }
         virtual Value *generate(const Literal &literal) = 0;
         virtual Value *generate(const Variable &variable) = 0;

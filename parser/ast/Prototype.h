@@ -3,7 +3,7 @@
 #include "TreeNode.h"
 #include <llvm/IR/Function.h>
 #include "generator/Generator.h"
-typedef lllvm::Function LLVMFunction;
+typedef llvm::Function LLVMFunction;
 namespace kaleido::ast {
     class Prototype : public TreeNode {
     public:
