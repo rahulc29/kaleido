@@ -5,5 +5,13 @@ My aim is to learn the LLVM infrastructure and APIs effectively.
 The original tutorial notes that it doesn't the "best engineering practices" to teach the more important concepts - such as how to implement a lexer. In contrast to this, I intend to maintain as much readability as possible.
 
 I'm also not implementing things the tutorial way to get a feel for things myself.
-## Update [Nov 15, 2021]
-My CLion free trial has expired. I've applied for the student license today. This may take upto a week. In the meantime, I'll be focusing on CP entirely (I tried writing code in VSCode but that was a complete disaster), I will resume development of kaleido after my license has been approved.
+## Update [Nov 27, 2021]
+Somehow, I can't even get the code to compile! 
+C++ compilers are so bloody stuck in the past that they do not allow for simple cyclic dependencies in type definitions. 
+This lead to me using all sorts of `class DeclarationOnly;` 
+hoping it would compile. But oh goodness! Clang really tried, but even that brave soul couldn't. 
+What's worse is that all this time, Clion _was_ able to work with these cyclic type definitions perfectly fine!
+Literally _every_ compiler allows this! 😭😭😭😭
+I'll do this whole thing again but in the _much better_ alternative : Rust. 
+I wish I had known Rust earlier when I started the project.
+Aight, I'm out, peace!
