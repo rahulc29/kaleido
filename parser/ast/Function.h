@@ -8,6 +8,9 @@ namespace kaleido::ast {
         Function(std::unique_ptr<Prototype> prototype, std::unique_ptr<TreeNode> body);
         const Prototype &prototype() const;
         const TreeNode &body() const;
+        LLVMFunction *generate(Generator &generator) {
+            return generator.generate(*this);
+        }
     private:
         std::unique_ptr<Prototype> mPrototype;
         // only one expression function bodies for now 😤

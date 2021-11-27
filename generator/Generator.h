@@ -13,6 +13,7 @@
 #include "parser/ast/Subtraction.h"
 #include <llvm/IR/Value.h>
 using llvm::Value;
+typedef lllvm::Function LLVMFunction;
 using namespace kaleido::ast;
 namespace kaleido::gen {
     // common interface to implement to write a generator given an AST
@@ -27,10 +28,12 @@ namespace kaleido::gen {
         virtual Value *generate(const Variable &variable) = 0;
         virtual Value *generate(const Addition &addition) = 0;
         virtual Value *generate(const Division &division) = 0;
-        virtual Value *generate(const Function &function) = 0;
+        virtual LLVMFunction *generate(const Function &function) = 0;
+        virtual LLVMFunction *generate(const Prototype &prototype) = 0;
         virtual Value *generate(const Invocation &invocation) = 0;
         virtual Value *generate(const Negation &negation) = 0;
         virtual Value *generate(const Subtraction &subtraction) = 0;
+        virtual Value *generate(const Multiplication &multiplication) = 0;
     };
 }
 #endif //KALEIDO_GENERATOR_GENERATOR_H
