@@ -1,7 +1,7 @@
 #include "LLVMGenerator.h"
 #include <llvm/IR/Constants.h>
 #include <llvm/IR/Type.h>
-#include <llvm/IR/FunctionType.h>
+#include <llvm/IR/DerivedTypes.h>
 #include <llvm/IR/Function.h>
 #include <llvm/IR/BasicBlock.h>
 #include <llvm/IR/Verifier.h>
@@ -9,7 +9,9 @@
 using llvm::ConstantFP;
 using llvm::Type;
 using llvm::BasicBlock;
+using llvm::FunctionType;
 Value *kaleido::gen::LLVMGenerator::generate(const Literal &literal) {
+    // get value from LLVM's constant pool
     return ConstantFP::get(mContext, llvm::APFloat(literal.value()));
 }
 Value *kaleido::gen::LLVMGenerator::generate(const Variable &variable) {
@@ -50,12 +52,13 @@ LLVMFunction *kaleido::gen::LLVMGenerator::generate(const Prototype &prototype) 
         funcType, LLVMFunction::ExternalLinkage, prototype.name(), mModule.get());
     auto i = 0;
     const auto &args = prototype.args();
-    for (auto &arg : function->args()) {
+    for (auto &arg: function->args()) {
         arg.setName(args[i++]);
     }
     return function;
 }
 LLVMFunction *kaleido::gen::LLVMGenerator::generate(const Function &function) {
+    // check if function is already declared
     auto func = mModule->getFunction(function.prototype().name());
     if (func == nullptr) {
         func = function.prototype().generate(*this);
@@ -63,21 +66,26 @@ LLVMFunction *kaleido::gen::LLVMGenerator::generate(const Function &function) {
     if (func == nullptr) {
         return nullptr;
     }
+    // if function is already declared and defined
     if (!func->empty()) {
         std::cerr << "Cannot redefine function " << function.prototype().name() << '\n';
         return nullptr;
     }
+    // only one block right now
+    // will need more after the addition of control flow
     auto block = BasicBlock::Create(mContext, "entry", func);
     mBuilder.SetInsertPoint(block);
     mNamedValues.clear();
-    for (auto &arg : func->args()) {
+    for (auto &arg: func->args()) {
         mNamedValues[arg.getName()] = &arg;
     }
-    if ((auto body = function.body().generate(*this)) != nullptr) {
+    auto body = function.body().generate(*this);
+    if (body != nullptr) {
         mBuilder.CreateRet(body);
         llvm::verifyFunction(*func);
         return func;
     }
+    // if body could not be formed; remove function from module
     func->eraseFromParent();
     return nullptr;
 }
@@ -88,12 +96,14 @@ Value *kaleido::gen::LLVMGenerator::generate(const Invocation &invocation) {
         std::cerr << "No function " << functionName << " found\n";
         return nullptr;
     }
+    // argument list size should be same
     auto expected = toCall->arg_size();
     auto actual = invocation.args().size();
     if (expected != actual) {
         std::cerr << "Incorrect no of arguments for function " << functionName << '\n';
         std::cerr << "Expected " << expected << " but got " << actual << '\n';
     }
+    // the actual arguments to pass to the function
     std::vector<Value *> argsForCall;
     for (const auto &arg: invocation.args()) {
         argsForCall.push_back(arg->generate(*this));
@@ -105,6 +115,7 @@ Value *kaleido::gen::LLVMGenerator::generate(const Invocation &invocation) {
     return mBuilder.CreateCall(toCall, argsForCall, "calltmp");
 }
 Value *kaleido::gen::LLVMGenerator::generate(const Negation &negation) {
+    // To be implemented
     return nullptr;
 }
 Value *kaleido::gen::LLVMGenerator::generate(const Subtraction &subtraction) {
@@ -116,6 +127,7 @@ Value *kaleido::gen::LLVMGenerator::generate(const Subtraction &subtraction) {
 }
 kaleido::gen::LLVMGenerator::LLVMGenerator() : mContext(), mBuilder(mContext), mModule(), mNamedValues() {
 }
+// Utility function to generate both sides of a binary expression
 std::pair<Value *, Value *> kaleido::gen::LLVMGenerator::generateBinarySides(const BinaryExpression &expression) {
     auto lhs = expression.leftChild().generate(*this);
     auto rhs = expression.rightChild().generate(*this);
